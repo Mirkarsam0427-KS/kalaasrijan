@@ -1,35 +1,14 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Mail, Loader2 } from 'lucide-react';
+import { Mail, Loader2, Facebook, Linkedin } from 'lucide-react';
 
 export default function App() {
-  const [timeLeft, setTimeLeft] = useState({ days: 30, hours: 0, minutes: 0, seconds: 0 });
   const [mounted, setMounted] = useState(false);
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   useEffect(() => {
     setMounted(true);
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + 30);
-
-    const interval = setInterval(() => {
-      const now = new Date();
-      const difference = targetDate.getTime() - now.getTime();
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        });
-      } else {
-        clearInterval(interval);
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -63,38 +42,47 @@ export default function App() {
   if (!mounted) return null;
 
   return (
-    <div 
-      className="h-screen w-full flex flex-col justify-between items-center relative p-4 md:p-8 overflow-hidden bg-[#F5E6D3]"
-      style={{
-        backgroundImage: "url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2069&auto=format&fit=crop')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
+    <div className="h-screen w-full flex flex-col justify-between items-center relative p-4 md:p-8 overflow-hidden bg-[#F5E6D3]">
+      {/* Animated Background Image */}
+      <motion.div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=2069&auto=format&fit=crop')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+        animate={{
+          scale: [1, 1.05, 1],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+
       {/* Warm Beige Overlay to ensure text readability while keeping the theme */}
       <div className="absolute inset-0 bg-[#F5E6D3]/80 z-0 backdrop-blur-[2px]"></div>
 
-      {/* Header - Centered Logo */}
-      <header className="w-full max-w-7xl flex justify-center items-center z-10 pt-2 md:pt-4">
+      {/* Main Content - Centered */}
+      <main className="z-10 flex flex-col items-center justify-center text-center w-full max-w-4xl flex-1 mt-8 md:mt-0">
+        {/* Logo */}
         <motion.img 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
           src="https://i.ibb.co/fG2JRcyz/GUIDLINES-LOGO-GRID.png" 
           alt="Kalaasrijan Logo" 
-          className="h-16 md:h-24 lg:h-28 w-auto object-contain opacity-90"
+          className="h-16 md:h-24 lg:h-28 w-auto object-contain opacity-90 mb-6 md:mb-8"
           style={{ filter: 'brightness(0) saturate(100%) invert(14%) sepia(50%) saturate(3000%) hue-rotate(340deg) brightness(90%) contrast(90%)' }}
           referrerPolicy="no-referrer"
         />
-      </header>
 
-      {/* Main Content - Pushed down slightly but tighter */}
-      <main className="z-10 flex flex-col items-center text-center w-full max-w-4xl mt-6 md:mt-10 mb-auto">
         <motion.h1 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="font-playfair text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[#1C1C1C] mb-3 md:mb-4"
+          className="font-playfair text-5xl md:text-7xl lg:text-[5.5rem] leading-tight font-bold tracking-tight text-[#1C1C1C] mb-6 md:mb-8"
         >
           We Are Coming Soon
         </motion.h1>
@@ -103,29 +91,10 @@ export default function App() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="font-playfair italic text-[#1C1C1C]/80 text-xs md:text-sm lg:text-base font-medium mb-8 md:mb-10 max-w-2xl leading-relaxed px-4"
+          className="font-playfair italic text-[#1C1C1C]/80 text-xs md:text-sm lg:text-base font-medium mb-6 md:mb-8 max-w-2xl leading-relaxed px-4"
         >
-          Our website is under construction. We'll be here soon with our new awesome site, subscribe to be notified.
+          Our Website is Under Construction. We'll be here Soon with our New Awesome Site, Subscribe to be Notified.
         </motion.p>
-
-        {/* Countdown - Smaller Size & Tighter Gap */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.7 }}
-          className="flex flex-wrap justify-center gap-6 md:gap-10 lg:gap-14 mb-8 md:mb-12"
-        >
-          {Object.entries(timeLeft).map(([unit, value]) => (
-            <div key={unit} className="flex flex-col items-center">
-              <span className="font-cinzel text-4xl md:text-5xl lg:text-6xl font-semibold text-[#5A1F1F] leading-none mb-1 md:mb-2">
-                {value.toString().padStart(2, '0')}
-              </span>
-              <span className="font-cinzel text-[10px] md:text-xs uppercase tracking-[0.3em] text-[#1C1C1C]/60 font-bold">
-                {unit}
-              </span>
-            </div>
-          ))}
-        </motion.div>
 
         {/* Subscribe Form */}
         <motion.div 
@@ -182,6 +151,47 @@ export default function App() {
             </svg>
             Chat with us
           </a>
+        </motion.div>
+
+        {/* Social Share Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1.1 }}
+          className="mt-8 md:mt-10 flex flex-col items-center gap-3"
+        >
+          <span className="text-[#1C1C1C]/60 text-[10px] md:text-xs font-semibold uppercase tracking-widest">Share</span>
+          <div className="flex items-center gap-4">
+            <a 
+              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent("Check out Kalaasrijan! They are coming soon.")}`}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="p-2 rounded-full border border-[#1C1C1C]/20 text-[#1C1C1C]/70 hover:bg-[#1C1C1C] hover:text-[#F5E6D3] hover:border-[#1C1C1C] transition-all duration-300 flex items-center justify-center w-[34px] h-[34px]"
+              aria-label="Share on X (Twitter)"
+            >
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" className="stroke-none">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+            <a 
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="p-2 rounded-full border border-[#1C1C1C]/20 text-[#1C1C1C]/70 hover:bg-[#1C1C1C] hover:text-[#F5E6D3] hover:border-[#1C1C1C] transition-all duration-300 flex items-center justify-center w-[34px] h-[34px]"
+              aria-label="Share on Facebook"
+            >
+              <Facebook size={16} strokeWidth={1.5} />
+            </a>
+            <a 
+              href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent("Kalaasrijan - Coming Soon")}`}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="p-2 rounded-full border border-[#1C1C1C]/20 text-[#1C1C1C]/70 hover:bg-[#1C1C1C] hover:text-[#F5E6D3] hover:border-[#1C1C1C] transition-all duration-300 flex items-center justify-center w-[34px] h-[34px]"
+              aria-label="Share on LinkedIn"
+            >
+              <Linkedin size={16} strokeWidth={1.5} />
+            </a>
+          </div>
         </motion.div>
       </main>
 
